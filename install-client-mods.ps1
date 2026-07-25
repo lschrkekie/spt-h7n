@@ -22,6 +22,11 @@
     NOTE: WTT - Content Backport alone is ~3.5GB - this script's total
     download is large. Make sure SptPath has several GB free before running.
 
+    Mods already installed into a given SptPath (tracked by URL in
+    SptPath\.spt-mod-installer\installed-urls.txt) are skipped on re-runs
+    instead of being re-downloaded. Bumping a mod's version in the manifest
+    changes its URL, so it's correctly picked up as a fresh install.
+
 .PARAMETER SptPath
     Root of the SPT client install (contains BepInEx\ and SPT\). If omitted,
     you will be prompted for it interactively.
@@ -94,10 +99,28 @@ if (-not (Test-Path (Join-Path $SptPath "BepInEx"))) {
 $TempDir = Join-Path $env:TEMP ("spt-mod-install-" + [guid]::NewGuid())
 New-Item -ItemType Directory -Path $TempDir | Out-Null
 
+# Tracks which mod URLs have already been installed into this specific
+# SptPath, so re-running the script skips mods that are already present
+# instead of re-downloading everything every time. Keyed by URL (not name)
+# so bumping a mod's version in the manifest - which changes its URL - is
+# correctly treated as "not yet installed" and gets pulled in.
+$InstalledMarkerDir = Join-Path $SptPath ".spt-mod-installer"
+$InstalledMarkerFile = Join-Path $InstalledMarkerDir "installed-urls.txt"
+New-Item -ItemType Directory -Path $InstalledMarkerDir -Force | Out-Null
+if (-not (Test-Path $InstalledMarkerFile)) { New-Item -ItemType File -Path $InstalledMarkerFile | Out-Null }
+$InstalledUrls = @(Get-Content $InstalledMarkerFile -ErrorAction SilentlyContinue)
+
 $Installed = @()
+$Skipped = @()
 
 try {
     foreach ($mod in $Mods) {
+        if ($InstalledUrls -contains $mod.Url) {
+            Write-Host "=== $($mod.Name) === already installed, skipping"
+            $Skipped += $mod.Name
+            continue
+        }
+
         Write-Host "=== $($mod.Name) ==="
         $ModDir = Join-Path $TempDir $mod.Name
         $DownloadDir = Join-Path $ModDir "download"
@@ -155,6 +178,7 @@ try {
         }
 
         Write-Host "  $($mod.Name) installed."
+        Add-Content -Path $InstalledMarkerFile -Value $mod.Url
         $Installed += $mod.Name
     }
 }
@@ -163,5 +187,6 @@ finally {
 }
 
 Write-Host ""
-Write-Host "Done. Installed: $($Installed -join ', ')"
-Write-Host "Restart the game client so BepInEx picks up the new plugins."
+Write-Host "Done. Installed: $(if ($Installed) { $Installed -join ', ' } else { 'none' })"
+if ($Skipped) { Write-Host "Already up to date, skipped: $($Skipped -join ', ')" }
+if ($Installed) { Write-Host "Restart the game client so BepInEx picks up the new plugins." }

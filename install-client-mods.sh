@@ -22,6 +22,11 @@
 # NOTE: WTT - Content Backport alone is ~3.5GB - this script's total download
 # is large. Make sure SPT_PATH has several GB free before running.
 #
+# Mods already installed into a given SPT_PATH (tracked by URL in
+# SPT_PATH/.spt-mod-installer/installed-urls.txt) are skipped on re-runs
+# instead of being re-downloaded. Bumping a mod's version in the manifest
+# changes its URL, so it's correctly picked up as a fresh install.
+#
 # Usage: install-client-mods.sh [SPT_PATH] [MANIFEST]
 #   SPT_PATH defaults to $SPT_PATH env var; if neither is set, you will be
 #   prompted for it interactively. Must be the root of an SPT client install
@@ -80,10 +85,28 @@ else
 fi
 jq -e '.mods | type == "array"' "$manifest_file" >/dev/null || { echo "FATAL: '$manifest_file' has no top-level 'mods' array."; exit 1; }
 
+# Tracks which mod URLs have already been installed into this specific
+# SptPath, so re-running the script skips mods that are already present
+# instead of re-downloading everything every time. Keyed by URL (not name)
+# so bumping a mod's version in the manifest - which changes its URL - is
+# correctly treated as "not yet installed" and gets pulled in.
+installed_marker_dir="$spt_path/.spt-mod-installer"
+installed_marker_file="$installed_marker_dir/installed-urls.txt"
+mkdir -p "$installed_marker_dir"
+touch "$installed_marker_file"
+
 installed=()
+skipped=()
 
 install_mod() {
     local name=$1 url=$2
+
+    if grep -qxF "$url" "$installed_marker_file"; then
+        echo "=== $name === already installed, skipping"
+        skipped+=("$name")
+        return
+    fi
+
     echo "=== $name ==="
 
     local mod_download_dir=$tmp_dir/$name/download
@@ -137,6 +160,7 @@ install_mod() {
     fi
 
     echo "  $name installed."
+    echo "$url" >> "$installed_marker_file"
     installed+=("$name")
 }
 
@@ -145,5 +169,8 @@ while IFS=$'\t' read -r name url; do
 done < <(jq -r '.mods[] | [.name, .url] | @tsv' "$manifest_file")
 
 echo
-echo "Done. Installed: ${installed[*]}"
-echo "Restart the client/headless container so BepInEx picks up the new plugins."
+echo "Done. Installed: ${installed[*]:-none}"
+[[ ${#skipped[@]} -gt 0 ]] && echo "Already up to date, skipped: ${skipped[*]}"
+if [[ ${#installed[@]} -gt 0 ]]; then
+    echo "Restart the client/headless container so BepInEx picks up the new plugins."
+fi
