@@ -1,0 +1,19 @@
+{
+  "_comment": "Single source of truth for client-side mods. install-client-mods.ps1 and install-client-mods.sh both read this file - edit versions/URLs here only, never hardcode them back into the scripts. Fika itself is just the first entry: the install loop in both scripts treats every entry identically (copies BepInEx/plugins, BepInEx/patchers, SPT/user/mods, EscapeFromTarkov_Data/Managed out of whatever it downloads), so no special-casing is needed. Keep the Fika entry's version in sync with FIKA_VERSION in entrypoint-pterodactyl.sh - the client plugin and server mod must match.",
+  "mods": [
+    { "name": "Fika-2.3.7", "url": "https://github.com/project-fika/Fika-Plugin/releases/download/v2.3.7/Fika.Release.2.3.7.zip" },
+    { "name": "SAIN-4.4.3", "url": "https://forge.sp-tarkov.com/mod/download/791/sain-solarints-ai-modifications-full-ai-combat-system-replacement/4.4.3" },
+    { "name": "BigBrain-1.4.0", "url": "https://forge.sp-tarkov.com/mod/download/902/bigbrain/1.4.0" },
+    { "name": "Waypoints-Expanded-Navmesh-1.8.2", "url": "https://forge.sp-tarkov.com/mod/download/827/waypoints-expanded-navmesh/1.8.2" },
+    { "name": "DynamicMaps-1.1.3", "url": "https://forge.sp-tarkov.com/mod/download/1431/dynamic-maps/1.1.3" },
+    { "name": "TemporaryFixes-4.0.1", "url": "https://forge.sp-tarkov.com/mod/download/1525/temporary-fixes/4.0.1" },
+    { "name": "HandsAreNotBusy-1.6.0", "url": "https://forge.sp-tarkov.com/mod/download/1298/handsarenotbusy/1.6.0" },
+    { "name": "ABPS-2.0.19", "url": "https://forge.sp-tarkov.com/mod/download/2097/abps-acids-bot-placement-system/2.0.19" },
+    { "name": "WTT-ContentBackport-1.0.7", "url": "https://forge.sp-tarkov.com/mod/download/2512/wtt-content-backport/1.0.7" },
+    { "name": "WTT-CommonLib-2.0.20", "url": "https://forge.sp-tarkov.com/mod/download/2310/wtt-commonlib/2.0.20" },
+    { "name": "ContentBackportPrestiges-1.0.3", "url": "https://forge.sp-tarkov.com/mod/download/2540/content-backport-prestiges/1.0.3" },
+    { "name": "ShowMeTheMoney-2.7.0", "url": "https://forge.sp-tarkov.com/mod/download/2299/show-me-the-money-item-pricing/2.7.0" },
+    { "name": "LoadBundleFaster-Crc32Patch-1.0.0", "url": "https://github.com/s8ga/SPT_PatchCrc32/releases/download/v1.0.0-fix/s8_SPT_PatchCRC32-v1.0.0-win-x86_64.7z" },
+    { "name": "LoadBundleEvenFaster-1.0.0", "url": "https://github.com/s8ga/SPT_LoadBundleEvenFaster/releases/download/v1.0.0/s8_SPT_LoadBundleEvenFaster-v1.0.0-win-x86_64.7z" }
+  ]
+}
