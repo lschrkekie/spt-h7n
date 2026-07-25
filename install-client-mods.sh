@@ -34,7 +34,10 @@ spt_path=${1:-${SPT_PATH:-}}
 manifest=${2:-${MANIFEST:-"$script_dir/mods-manifest.json"}}
 
 if [[ -z "$spt_path" ]]; then
-    read -rp "Path to your SPT client install (folder containing BepInEx/): " spt_path
+    # Read from /dev/tty, not stdin: when this script is run via `curl | bash`,
+    # stdin is the pipe carrying the script's own source, not the terminal -
+    # a plain `read` here would silently return empty instead of prompting.
+    read -rp "Path to your SPT client install (folder containing BepInEx/): " spt_path < /dev/tty
 fi
 
 if [[ ! -d "$spt_path" ]]; then
