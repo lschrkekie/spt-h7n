@@ -22,10 +22,11 @@
 # NOTE: WTT - Content Backport alone is ~3.5GB - this script's total download
 # is large. Make sure SPT_PATH has several GB free before running.
 #
-# Mods already installed into a given SPT_PATH (tracked by URL in
-# SPT_PATH/.spt-mod-installer/installed-urls.txt) are skipped on re-runs
-# instead of being re-downloaded. Bumping a mod's version in the manifest
-# changes its URL, so it's correctly picked up as a fresh install.
+# Mods already installed into a given SPT_PATH at the version currently in
+# the manifest (tracked in SPT_PATH/.spt-mod-installer/installed-versions.json)
+# are skipped on re-runs instead of being re-downloaded. Comparison is exact
+# name+version equality, not "is a version present" - so both upgrades and
+# rollbacks in the manifest are correctly picked up as installs, not skipped.
 #
 # Usage: install-client-mods.sh [SPT_PATH] [MANIFEST]
 #   SPT_PATH defaults to $SPT_PATH env var; if neither is set, you will be
@@ -84,30 +85,32 @@ else
     manifest_file=$manifest
 fi
 jq -e '.mods | type == "array"' "$manifest_file" >/dev/null || { echo "FATAL: '$manifest_file' has no top-level 'mods' array."; exit 1; }
+jq -e '.mods | all(has("name") and has("version") and has("url"))' "$manifest_file" >/dev/null || { echo "FATAL: every entry in '$manifest_file' needs 'name', 'version', and 'url'."; exit 1; }
 
-# Tracks which mod URLs have already been installed into this specific
-# SptPath, so re-running the script skips mods that are already present
-# instead of re-downloading everything every time. Keyed by URL (not name)
-# so bumping a mod's version in the manifest - which changes its URL - is
-# correctly treated as "not yet installed" and gets pulled in.
+# Tracks the installed version of each mod in this specific SptPath as a
+# {"name": "version"} JSON object, so re-running the script only (re)installs
+# mods whose manifest version differs from what's recorded - not just "is
+# something already there". Handles upgrades and rollbacks alike.
 installed_marker_dir="$spt_path/.spt-mod-installer"
-installed_marker_file="$installed_marker_dir/installed-urls.txt"
+installed_marker_file="$installed_marker_dir/installed-versions.json"
 mkdir -p "$installed_marker_dir"
-touch "$installed_marker_file"
+[[ -f "$installed_marker_file" ]] || echo '{}' > "$installed_marker_file"
 
 installed=()
 skipped=()
 
 install_mod() {
-    local name=$1 url=$2
+    local name=$1 version=$2 url=$3
 
-    if grep -qxF "$url" "$installed_marker_file"; then
-        echo "=== $name === already installed, skipping"
-        skipped+=("$name")
+    local installed_version
+    installed_version=$(jq -r --arg name "$name" '.[$name] // empty' "$installed_marker_file")
+    if [[ "$installed_version" == "$version" ]]; then
+        echo "=== $name $version === already installed, skipping"
+        skipped+=("$name $version")
         return
     fi
 
-    echo "=== $name ==="
+    echo "=== $name $version ==="
 
     local mod_download_dir=$tmp_dir/$name/download
     local mod_extract_dir=$tmp_dir/$name/extract
@@ -159,14 +162,15 @@ install_mod() {
         fi
     fi
 
-    echo "  $name installed."
-    echo "$url" >> "$installed_marker_file"
-    installed+=("$name")
+    echo "  $name $version installed."
+    jq --arg name "$name" --arg version "$version" '.[$name] = $version' "$installed_marker_file" > "$installed_marker_file.tmp"
+    mv "$installed_marker_file.tmp" "$installed_marker_file"
+    installed+=("$name $version")
 }
 
-while IFS=$'\t' read -r name url; do
-    install_mod "$name" "$url"
-done < <(jq -r '.mods[] | [.name, .url] | @tsv' "$manifest_file")
+while IFS=$'\t' read -r name version url; do
+    install_mod "$name" "$version" "$url"
+done < <(jq -r '.mods[] | [.name, .version, .url] | @tsv' "$manifest_file")
 
 echo
 echo "Done. Installed: ${installed[*]:-none}"
