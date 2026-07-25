@@ -5,6 +5,7 @@
     { "name": "SAIN", "version": "4.4.3", "url": "https://forge.sp-tarkov.com/mod/download/791/sain-solarints-ai-modifications-full-ai-combat-system-replacement/4.4.3" },
     { "name": "BigBrain", "version": "1.4.0", "url": "https://forge.sp-tarkov.com/mod/download/902/bigbrain/1.4.0" },
     { "name": "Waypoints-Expanded-Navmesh", "version": "1.8.2", "url": "https://forge.sp-tarkov.com/mod/download/827/waypoints-expanded-navmesh/1.8.2" },
+    { "name": "ORBIT", "version": "1.2.1", "url": "https://github.com/Chazut/ORBIT/releases/download/1.2.1/ORBIT-1.2.1.zip" },
     { "name": "DynamicMaps", "version": "1.1.3", "url": "https://forge.sp-tarkov.com/mod/download/1431/dynamic-maps/1.1.3" },
     { "name": "TemporaryFixes", "version": "4.0.1", "url": "https://forge.sp-tarkov.com/mod/download/1525/temporary-fixes/4.0.1" },
     { "name": "HandsAreNotBusy", "version": "1.6.0", "url": "https://forge.sp-tarkov.com/mod/download/1298/handsarenotbusy/1.6.0" },
@@ -14,6 +15,9 @@
     { "name": "ContentBackportPrestiges", "version": "1.0.3", "url": "https://forge.sp-tarkov.com/mod/download/2540/content-backport-prestiges/1.0.3" },
     { "name": "ShowMeTheMoney", "version": "2.7.0", "url": "https://forge.sp-tarkov.com/mod/download/2299/show-me-the-money-item-pricing/2.7.0" },
     { "name": "LoadBundleFaster-Crc32Patch", "version": "1.0.0", "url": "https://github.com/s8ga/SPT_PatchCrc32/releases/download/v1.0.0-fix/s8_SPT_PatchCRC32-v1.0.0-win-x86_64.7z" },
-    { "name": "LoadBundleEvenFaster", "version": "1.0.0", "url": "https://github.com/s8ga/SPT_LoadBundleEvenFaster/releases/download/v1.0.0/s8_SPT_LoadBundleEvenFaster-v1.0.0-win-x86_64.7z" }
+    { "name": "LoadBundleEvenFaster", "version": "1.0.0", "url": "https://github.com/s8ga/SPT_LoadBundleEvenFaster/releases/download/v1.0.0/s8_SPT_LoadBundleEvenFaster-v1.0.0-win-x86_64.7z" },
+    { "name": "HealingAutoCancel", "version": "5.0.0", "url": "https://github.com/minihazel/HealingAutoCancel/releases/download/5.0.0/HealingAutoCancel.zip" },
+    { "name": "MergeConsumables", "version": "1.5.5", "url": "https://github.com/Lacyway/MergeConsumables/releases/download/v1.5.5/MergeConsumables.zip" },
+    { "name": "TraderSearch", "version": "1.0.0", "url": "https://github.com/maschine34675/TraderSearch/releases/download/v1.0.0/maschine-TraderSearch-1.0.0.zip" }
   ]
 }
