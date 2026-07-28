@@ -1,7 +1,7 @@
 {
   "_comment": "Single source of truth for client-side mods. install-client-mods.ps1 and install-client-mods.sh both read this file - edit versions/URLs here only, never hardcode them back into the scripts. Fika itself is just the first entry: the install loop in both scripts treats every entry identically (copies BepInEx/plugins, BepInEx/patchers, SPT/user/mods, EscapeFromTarkov_Data/Managed out of whatever it downloads), so no special-casing is needed. Keep the Fika entry's version in sync with FIKA_VERSION in entrypoint-pterodactyl.sh - as of Fika 2.3.8 the client only requires server >= 2.3.5 (checked via _requiredServerVersion in FikaPlugin.cs), so they don't need to match exactly, just satisfy that. Each entry's 'version' field is compared against installed-versions.json in the target SptPath to decide whether to (re)install - bump it whenever you bump the url, even if it's not embedded in the url text.",
   "mods": [
-    { "name": "Fika", "version": "2.3.8", "url": "https://github.com/project-fika/Fika-Plugin/releases/download/v2.3.8/Fika.Release.2.3.8.zip" },
+    { "name": "Fika", "version": "2.3.9", "url": "https://github.com/project-fika/Fika-Plugin/releases/download/v2.3.9/Fika.Release.2.3.9.zip" },
     { "name": "SAIN", "version": "4.4.3", "url": "https://forge.sp-tarkov.com/mod/download/791/sain-solarints-ai-modifications-full-ai-combat-system-replacement/4.4.3" },
     { "name": "BigBrain", "version": "1.4.0", "url": "https://forge.sp-tarkov.com/mod/download/902/bigbrain/1.4.0" },
     { "name": "Waypoints-Expanded-Navmesh", "version": "1.8.2", "url": "https://forge.sp-tarkov.com/mod/download/827/waypoints-expanded-navmesh/1.8.2" },
