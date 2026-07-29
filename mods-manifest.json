@@ -10,7 +10,7 @@
     { "name": "TemporaryFixes", "version": "4.0.1", "url": "https://forge.sp-tarkov.com/mod/download/1525/temporary-fixes/4.0.1" },
     { "name": "HandsAreNotBusy", "version": "1.6.0", "url": "https://forge.sp-tarkov.com/mod/download/1298/handsarenotbusy/1.6.0" },
     { "name": "ABPS", "version": "2.0.19", "url": "https://forge.sp-tarkov.com/mod/download/2097/abps-acids-bot-placement-system/2.0.19" },
-    { "name": "WTT-ContentBackport", "version": "1.1.0", "url": "https://forge.sp-tarkov.com/mod/download/2512/wtt-content-backport/1.1.0" },
+    { "name": "WTT-ContentBackport", "version": "1.1.0", "url": "https://forge.sp-tarkov.com/mod/download/2512/wtt-content-backport/1.1.2" },
     { "name": "WTT-CommonLib", "version": "2.0.23", "url": "https://forge.sp-tarkov.com/mod/download/2310/wtt-commonlib/2.0.23" },
     { "name": "ContentBackportPrestiges", "version": "1.0.5", "url": "https://forge.sp-tarkov.com/mod/download/2540/content-backport-prestiges/1.0.5" },
     { "name": "ShowMeTheMoney", "version": "2.7.0", "url": "https://forge.sp-tarkov.com/mod/download/2299/show-me-the-money-item-pricing/2.7.0" },
